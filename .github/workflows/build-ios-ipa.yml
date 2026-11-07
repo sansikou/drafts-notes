@@ -9,7 +9,7 @@ on:
 
 jobs:
   ipa:
-    runs-on: macos-14
+    runs-on: macos-latest
     defaults:
       run:
         working-directory: mobile
