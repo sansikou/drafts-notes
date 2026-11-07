@@ -1,0 +1,17 @@
+node_modules/
+dist/
+release/win-unpacked/
+release/*.exe
+release/*.blockmap
+release/*.yml
+release/_exe-icon-check.png
+*.log
+.DS_Store
+mobile/node_modules/
+mobile/www/renderer.bundle.js
+mobile/ios/App/Pods/
+mobile/ios/App/build/
+mobile/build/
+mobile/.capacitor/
+.env
+.env.*

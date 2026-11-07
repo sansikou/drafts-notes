@@ -1,0 +1,36 @@
+directories:
+  output: release
+  buildResources: build
+appId: com.drafts.app
+productName: Drafts
+icon: icon.ico
+files:
+  - filter:
+      - main.js
+      - preload.js
+      - index.html
+      - float.html
+      - styles.css
+      - supabase.js
+      - icon.ico
+      - icon.png
+      - icon.jpg
+      - icon-tray.png
+      - dist/**/*
+asar: true
+win:
+  icon: icon.ico
+  signAndEditExecutable: true
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  shortcutName: Drafts
+electronVersion: 42.4.1

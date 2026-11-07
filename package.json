@@ -1,0 +1,88 @@
+{
+  "name": "drafts",
+  "version": "1.0.0",
+  "description": "极简笔记工具 — 悬浮球唤出，所见即所得编辑，Supabase 云同步",
+  "main": "main.js",
+  "scripts": {
+    "build:icons": "node scripts/ensure-icons.js",
+    "build:renderer": "esbuild renderer.js --bundle --outfile=dist/renderer.bundle.js --format=iife --platform=browser",
+    "prestart": "npm run build:icons",
+    "start": "npm run build:renderer && electron .",
+    "dev": "npm run build:icons && npm run build:renderer && electron . --enable-logging",
+    "postpack:icon": "node scripts/set-exe-icon.js",
+    "pack": "npm run build:icons && npm run build:renderer && electron-builder --win --dir && npm run postpack:icon",
+    "dist": "npm run pack",
+    "dist:installer": "npm run build:icons && npm run build:renderer && electron-builder --win --publish never && npm run postpack:icon"
+  },
+  "author": "",
+  "license": "MIT",
+  "build": {
+    "appId": "com.drafts.app",
+    "productName": "Drafts",
+    "icon": "icon.ico",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "float.html",
+      "styles.css",
+      "supabase.js",
+      "icon.ico",
+      "icon.png",
+      "icon.jpg",
+      "icon-tray.png",
+      "dist/**/*"
+    ],
+    "asar": true,
+    "win": {
+      "icon": "icon.ico",
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Drafts"
+    }
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "@tiptap/core": "^2.11.5",
+    "@tiptap/extension-bullet-list": "^2.11.5",
+    "@tiptap/extension-heading": "^2.11.5",
+    "@tiptap/extension-placeholder": "^2.11.5",
+    "@tiptap/extension-task-item": "^2.27.2",
+    "@tiptap/extension-task-list": "^2.27.2",
+    "@tiptap/pm": "^2.11.5",
+    "@tiptap/starter-kit": "^2.11.5",
+    "electron-store": "^8.2.0",
+    "marked": "^15.0.7",
+    "turndown": "^7.2.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "electron": "^42.4.1",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.25.0",
+    "jimp": "^1.6.1",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2"
+  }
+}

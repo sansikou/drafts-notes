@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 44px;
+      height: 44px;
+      overflow: hidden;
+      background: transparent;
+      border-radius: 50%;
+    }
+    .ball {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-app-region: no-drag;
+      background: radial-gradient(circle at 40% 35%, #4a90e2 0%, #0b3d91 70%);
+      box-shadow: 0 3px 14px rgba(0, 60, 140, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .ball:active { cursor: grabbing; }
+    .ball:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 18px rgba(0, 60, 140, 0.45);
+    }
+    .ball img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .ball img.is-missing {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="ball" class="ball" title="拖动移动 · 点击展开">
+    <img id="ball-icon" src="icon.png" alt="Drafts" draggable="false" />
+  </div>
+  <script>
+    const { ipcRenderer } = require('electron');
+    const ball = document.getElementById('ball');
+    const ballIcon = document.getElementById('ball-icon');
+
+    // png 优先；失败再试 jpg，再失败则保留蓝色底，避免“悬浮球消失”
+    const iconCandidates = ['icon.png', 'icon.jpg', 'icon.ico'];
+    let iconIndex = 0;
+    ballIcon.addEventListener('error', () => {
+      iconIndex += 1;
+      if (iconIndex < iconCandidates.length) {
+        ballIcon.src = iconCandidates[iconIndex];
+      } else {
+        ballIcon.classList.add('is-missing');
+      }
+    });
+
+    let pointerDown = false;
+    let startScreen = null;
+    let lastScreen = null;
+    let hasMoved = false;
+
+    const DRAG_THRESHOLD = 5;
+
+    ball.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      pointerDown = true;
+      hasMoved = false;
+      startScreen = { x: e.screenX, y: e.screenY };
+      lastScreen = { x: e.screenX, y: e.screenY };
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!pointerDown || !lastScreen) return;
+      const totalDx = e.screenX - startScreen.x;
+      const totalDy = e.screenY - startScreen.y;
+      if (!hasMoved && (Math.abs(totalDx) > DRAG_THRESHOLD || Math.abs(totalDy) > DRAG_THRESHOLD)) {
+        hasMoved = true;
+      }
+      if (hasMoved) {
+        ipcRenderer.send('float-window-move', {
+          dx: e.screenX - lastScreen.x,
+          dy: e.screenY - lastScreen.y,
+        });
+        lastScreen = { x: e.screenX, y: e.screenY };
+      }
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (!pointerDown) return;
+      pointerDown = false;
+      if (!hasMoved && e.button === 0) {
+        ipcRenderer.send('expand-main');
+      }
+      startScreen = null;
+      lastScreen = null;
+    });
+  </script>
+</body>
+</html>

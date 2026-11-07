@@ -1,0 +1,33 @@
+{
+  "name": "drafts-ios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Drafts iOS — Capacitor 轻量壳，直连同一 Supabase",
+  "scripts": {
+    "build:web": "node scripts/build-web.js",
+    "sync": "npm run build:web && npx cap sync ios",
+    "open:ios": "npx cap open ios",
+    "build:ipa:hint": "node -e \"console.log('在 Mac 上运行: npm run sync && bash scripts/build-ipa.sh')\""
+  },
+  "dependencies": {
+    "@capacitor/app": "^7.0.1",
+    "@capacitor/core": "^7.2.0",
+    "@capacitor/ios": "^7.2.0",
+    "@capacitor/keyboard": "^7.0.1",
+    "@capacitor/status-bar": "^7.0.1",
+    "@supabase/supabase-js": "^2.108.2",
+    "@tiptap/core": "^2.11.5",
+    "@tiptap/extension-heading": "^2.11.5",
+    "@tiptap/extension-placeholder": "^2.11.5",
+    "@tiptap/extension-task-item": "^2.27.2",
+    "@tiptap/extension-task-list": "^2.27.2",
+    "@tiptap/starter-kit": "^2.11.5",
+    "marked": "^15.0.7",
+    "turndown": "^7.2.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.2.0",
+    "esbuild": "^0.25.0"
+  }
+}

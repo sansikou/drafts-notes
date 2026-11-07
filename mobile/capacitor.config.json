@@ -1,0 +1,23 @@
+{
+  "appId": "com.drafts.app",
+  "appName": "Drafts",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "preferredContentMode": "mobile",
+    "scrollEnabled": true,
+    "backgroundColor": "#fafafc"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true
+    },
+    "Keyboard": {
+      "resize": "body"
+    }
+  }
+}

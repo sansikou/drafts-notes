@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co;" />
+  <title>Drafts</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button id="btn-new-note" class="icon-btn icon-btn-primary" title="新建笔记" aria-label="新建笔记">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="btn-toggle-sidebar" class="icon-btn" title="笔记列表" aria-label="笔记列表">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="2" y="3" width="14" height="2" rx="1" fill="currentColor"/>
+            <rect x="2" y="8" width="14" height="2" rx="1" fill="currentColor"/>
+            <rect x="2" y="13" width="10" height="2" rx="1" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="top-bar-right">
+        <button id="btn-pin-note" class="icon-btn" title="置顶笔记" aria-label="置顶笔记">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1v14M8 1l3 3M8 1L5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="btn-delete-note" class="icon-btn icon-btn-danger" title="删除当前笔记" aria-label="删除当前笔记">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 4h10M6 4V3h4v1M5 4v9a1 1 0 001 1h4a1 1 0 001-1V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="btn-toggle-source" class="text-btn" title="切换 Markdown 源码视图">MD</button>
+        <div class="window-controls">
+          <button id="btn-minimize-ball" class="win-btn" title="缩小为悬浮球">⧉</button>
+          <button id="btn-close-tray" class="win-btn win-btn-close" title="缩小到托盘">×</button>
+        </div>
+      </div>
+    </header>
+
+    <aside id="sidebar" class="sidebar hidden">
+      <div class="sidebar-tabs">
+        <button id="tab-all" class="sidebar-tab active">全部</button>
+        <button id="tab-trash" class="sidebar-tab">回收站</button>
+      </div>
+
+      <div id="sidebar-toolbar" class="sidebar-toolbar hidden">
+        <button id="btn-select-all" class="sidebar-tool-btn">全选</button>
+        <button id="btn-delete-selected" class="sidebar-tool-btn sidebar-tool-danger">删除</button>
+        <button id="btn-cancel-select" class="sidebar-tool-btn">取消</button>
+      </div>
+
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9.5 9.5L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input id="search-input" type="search" placeholder="搜索笔记…" autocomplete="off" />
+      </div>
+
+      <ul id="note-list" class="note-list"></ul>
+
+      <div class="sidebar-footer">
+        <button id="btn-select-mode" class="sidebar-select-btn">选择</button>
+      </div>
+    </aside>
+
+    <main class="editor-area">
+      <div id="note-meta" class="note-meta"></div>
+
+      <div id="toolbar" class="toolbar">
+        <button class="toolbar-btn" data-action="h1" title="标题 1">H1</button>
+        <button class="toolbar-btn" data-action="h2" title="标题 2">H2</button>
+        <button class="toolbar-btn" data-action="h3" title="标题 3">H3</button>
+        <button class="toolbar-btn" data-action="h4" title="标题 4">H4</button>
+        <span class="toolbar-divider"></span>
+        <button class="toolbar-btn" data-action="bold" title="加粗"><strong>B</strong></button>
+        <button class="toolbar-btn" data-action="italic" title="斜体"><em>I</em></button>
+        <button class="toolbar-btn" data-action="blockquote" title="引用">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <path d="M2 4h3v5H3.5a1.5 1.5 0 000 3H2V4zm7 0h3v5h-1.5a1.5 1.5 0 000 3H9V4z"/>
+          </svg>
+        </button>
+        <button class="toolbar-btn" data-action="bulletList" title="无序列表">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <circle cx="2" cy="3" r="1.2"/><rect x="5" y="2.2" width="8" height="1.6" rx=".8"/>
+            <circle cx="2" cy="7" r="1.2"/><rect x="5" y="6.2" width="8" height="1.6" rx=".8"/>
+            <circle cx="2" cy="11" r="1.2"/><rect x="5" y="10.2" width="8" height="1.6" rx=".8"/>
+          </svg>
+        </button>
+        <button class="toolbar-btn" data-action="taskList" title="待办事项">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1.5" y="1.5" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 7l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="editor" class="editor-content"></div>
+      <textarea id="source-view" class="source-view hidden"
+                placeholder="Markdown 源码…" spellcheck="false"></textarea>
+    </main>
+
+    <div id="sync-indicator" class="sync-indicator" title="同步状态"></div>
+  </div>
+
+  <script src="dist/renderer.bundle.js"></script>
+</body>
+</html>
